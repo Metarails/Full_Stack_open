@@ -27,32 +27,32 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant browser
+    participant selain
     participant server
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    selain->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
     activate server
-    server-->>browser: 200, HTML document
+    server-->>selain: 200, HTML document
     deactivate server
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    selain->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
     activate server
-    server-->>browser: the css file
+    server-->>selain: the css file
     deactivate server
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    selain->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
     activate server
-    server-->>browser: the JavaScript file
+    server-->>selain: the JavaScript file
     deactivate server
     
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
+    Note right of selain: The browser starts executing the JavaScript code that fetches the JSON from the server
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    selain->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
-    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+    server-->>selain: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
     deactivate server    
 
-    Note right of browser: selain luo html elementtiin tietojen mukaisen tiedon
+    Note right of selain: selain luo html elementtiin tietojen mukaisen tiedon
  ```
 
 0.6 Single Page App
