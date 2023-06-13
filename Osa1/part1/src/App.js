@@ -26,12 +26,16 @@ const Hello = ({ name, age }) => {
 }
 
 const App = (props) => {
+
+  const hello = (who) => () => { console.log("ZA WORLD!", who); }
+
   const [counter, setCounter] = useState(0)
   console.log('rendering with counter value', counter)
   const [left, setLeft] = useState(0)
   const [right, setRight] = useState(0)
   const [allClicks, setAll] = useState([])
   const [total, setTotal] = useState(0)
+  const [value, setValue] = useState(10)
 
   const handleLeftClick = () => {
     setAll(allClicks.concat("L"));
@@ -67,6 +71,10 @@ const App = (props) => {
     setCounter(0);
   }
 
+  const setToValue = (newValue) => () => {
+    console.log("value now: ", newValue)
+    setValue(newValue)
+  }
   console.log('rendering...', counter)
 
   // const { counter } = props
@@ -89,6 +97,11 @@ const App = (props) => {
 
   return (
     <div>
+      <p>
+        <button onClick={hello("wordl")}>Za World!</button>
+        <button onClick={hello("reacshun!")}>Za World!</button>
+        <button onClick={hello("fundari")}>Za World!</button>
+      </p>
       <Display counter={counter} />
       {/* <p>Lasketaan: {counter}</p> */}
       {/* <button onClick={increaseByOne}> */}
@@ -126,6 +139,12 @@ const App = (props) => {
         <History allClicks={allClicks} />
         {/* <p>{allClicks.join(" ")}</p> */}
       </div>
+      <p>
+        Value testing: {value}
+        <button onClick={setToValue(1000)}>thousand</button>
+        <button onClick={setToValue(0)}>Zero</button>
+        <button onClick={setToValue(value + 1)}>wohoos +1</button>
+      </p>
     </div>
   )
 }
