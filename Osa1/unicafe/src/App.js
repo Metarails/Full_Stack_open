@@ -22,6 +22,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+
   const increaseGood = () => {
     console.log('good ', good);
     setGood(good + 1);
@@ -35,6 +36,8 @@ const App = () => {
     setBad(bad + 1);
   }
 
+  const allvotes = good + neutral + bad;
+
   return (
     <div>
       <h1>Give feedback</h1>
@@ -42,9 +45,10 @@ const App = () => {
       <FeedbackButton handleClick={increaseNeutral} text="Neutral" />
       <FeedbackButton handleClick={increaseBad} text="Bad" />
       <h1>Statistics</h1>
-      <FeedbackStats text="Good" count={good} />
-      <FeedbackStats text="Neutral" count={neutral} />
-      <FeedbackStats text="Bad" count={bad} />
+      <FeedbackStats text="Good: " count={good} />
+      <FeedbackStats text="Neutral: " count={neutral} />
+      <FeedbackStats text="Bad: " count={bad} />
+      <FeedbackStats text="All: " count={allvotes} />
     </div>
   );
 }
