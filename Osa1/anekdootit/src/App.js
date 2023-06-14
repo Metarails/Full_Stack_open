@@ -22,6 +22,8 @@ function App() {
   const [points, setPoints] = useState(copypoints)
   console.log(points)
 
+  // const [highest, setHighest] = useState(0)
+
   const selectRandom = () => {
     const anecdotesLenght = anecdotes.length
     console.log(anecdotesLenght)
@@ -33,11 +35,17 @@ function App() {
     const copy = [...points]
     copy[selected] += 1 
     setPoints(copy)
+    console.log("highes", highest, points[selected])
+    // if (points[selected] > points[highest]){
+    //   setHighest(selected)
+    // }
   }
   
-
+  console.log(Math.max(...points))
+  const highest = points.indexOf(Math.max(...points))
   return (
     <div>
+      <h1>Anectode of the day</h1>
         <div>
         {anecdotes[selected]}
         </div>
@@ -50,6 +58,9 @@ function App() {
           <button onClick={selectRandom} >Next anectode</button>
         </p>
       </div>
+      <h1>Anectode with highest votes</h1>
+      <div>{anecdotes[highest]}</div>
+      <div>votes: {points[highest]}</div>
     </div>
   );
 }
