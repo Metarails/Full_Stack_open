@@ -13,7 +13,7 @@ const Statistics = ( {good, bad, neutral}) => {
   
   const allvotes = good + neutral + bad;
   const average = (good - bad) / allvotes
-  const positive = (good / allvotes) * 100
+  const positive = ((good / allvotes) * 100) + " %"
 
   if (allvotes === 0 ){
     return (
@@ -26,13 +26,26 @@ const Statistics = ( {good, bad, neutral}) => {
   return (
     <div>
       <h1>Statistics:</h1>
-      <div>Good: {good}</div>
-      <div>Neutral: {neutral}</div>
-      <div>Bad: {bad}</div>
-      <div>All votes: {allvotes}</div>
-      <div>Average: {average}</div>
-      <div>Positive: {positive} %</div>
+      <table>
+        <tbody>
+        <StatisticLine text={"Good: "} value={good} />
+        <StatisticLine text={"Neutral: "} value={neutral} />
+        <StatisticLine text={"Bad: "} value={bad} />
+        <StatisticLine text={"All votes: "} value={allvotes} />
+        <StatisticLine text={"Average: "} value={average} />
+        <StatisticLine text={"Positive: "} value={positive} />
+        </tbody>
+      </table>
     </div>
+  )
+}
+
+const StatisticLine  = (props) => {
+
+  return (
+      <tr>
+        <td>{props.text}</td><td>{props.value}</td>
+      </tr>
   )
 }
 
@@ -44,15 +57,12 @@ const App = () => {
 
 
   const increaseGood = () => {
-    console.log('good ', good);
     setGood(good + 1);
   }
   const increaseNeutral = () => {
-    console.log('neutral ', neutral);
     setNeutral(neutral + 1);
   }
   const increaseBad = () => {
-    console.log('bad', bad);
     setBad(bad + 1);
   }
 
