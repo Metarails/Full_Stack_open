@@ -15,22 +15,41 @@ function App() {
    
   const [selected, setSelected] = useState(0)
 
+  const copypoints = Array(anecdotes.length).fill(0)
+  console.log(copypoints)
+
+
+  const [points, setPoints] = useState(copypoints)
+  console.log(points)
+
   const selectRandom = () => {
     const anecdotesLenght = anecdotes.length
     console.log(anecdotesLenght)
     const randomNumber = Math.floor(Math.random()*(anecdotesLenght - 1))
     setSelected(randomNumber);
   }
+
+  const voteAnectode = () => {
+    const copy = [...points]
+    copy[selected] += 1 
+    setPoints(copy)
+  }
   
 
   return (
     <div>
-      <p>
-        <button onClick={selectRandom} >Next anectode</button>
-      </p>
-      <p>
+        <div>
         {anecdotes[selected]}
-      </p>
+        </div>
+        <div>
+          Votes: {points[selected]}
+        </div>
+      <div>
+        <p>
+          <button onClick={voteAnectode} >Vote</button>
+          <button onClick={selectRandom} >Next anectode</button>
+        </p>
+      </div>
     </div>
   );
 }
