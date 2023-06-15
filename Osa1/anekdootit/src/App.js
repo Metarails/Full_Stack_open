@@ -12,46 +12,46 @@ function App() {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+
   const [selected, setSelected] = useState(0)
 
   const copypoints = Array(anecdotes.length).fill(0)
-  console.log(copypoints)
+  // console.log(copypoints)
 
 
   const [points, setPoints] = useState(copypoints)
-  console.log(points)
+  // console.log(points)
 
   // const [highest, setHighest] = useState(0)
 
   const selectRandom = () => {
     const anecdotesLenght = anecdotes.length
-    console.log(anecdotesLenght)
-    const randomNumber = Math.floor(Math.random()*(anecdotesLenght - 1))
+    // console.log(anecdotesLenght)
+    const randomNumber = Math.floor(Math.random() * (anecdotesLenght - 1))
     setSelected(randomNumber);
   }
 
   const voteAnectode = () => {
     const copy = [...points]
-    copy[selected] += 1 
+    copy[selected] += 1
     setPoints(copy)
-    console.log("highes", highest, points[selected])
+    // console.log("highes", highest, points[selected])
     // if (points[selected] > points[highest]){
     //   setHighest(selected)
     // }
   }
-  
-  console.log(Math.max(...points))
+
+  // console.log(Math.max(...points))
   const highest = points.indexOf(Math.max(...points))
   return (
     <div>
       <h1>Anectode of the day</h1>
-        <div>
+      <div>
         {anecdotes[selected]}
-        </div>
-        <div>
-          Votes: {points[selected]}
-        </div>
+      </div>
+      <div>
+        Votes: {points[selected]}
+      </div>
       <div>
         <p>
           <button onClick={voteAnectode} >Vote</button>
