@@ -34,6 +34,12 @@ const Total = ({parts}) => {
 
   console.log("total execs: ", execs)
 
+  const total = parts.reduce( (s, p) => {
+    console.log('what is happening', s, p)
+    return 0 
+  })
+  console.log("tolas:", total)
+
   return (
     <div>
       <p>
