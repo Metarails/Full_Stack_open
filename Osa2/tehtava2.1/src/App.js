@@ -25,13 +25,23 @@ const Content = ({parts}) => {
   )
 }
 
-// const Total = (props) => {
-//   return (
-//     <div>
-//       <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
-//     </div>
-//   )
-// }
+const Total = ({parts}) => {
+
+  console.log("totals: ", parts)
+  let execs = 0
+
+  parts.map(part => execs += part.exercises)
+
+  console.log("total execs: ", execs)
+
+  return (
+    <div>
+      <p>
+        Number of exercises: {execs}
+      </p>
+    </div>
+  )
+}
 
 const Course = ({course}) => {
 
@@ -44,6 +54,7 @@ const Course = ({course}) => {
     <>
     <Header course={course.name} key={course.id} />
     <Content parts={course.parts} />
+    <Total parts={course.parts} />
     </>
   )
 }
