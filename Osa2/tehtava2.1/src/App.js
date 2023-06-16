@@ -16,7 +16,7 @@ const Part = (props) => {
 
 const Content = ({parts}) => {
 
-  console.log("content elemeeetn: ", parts)
+  // console.log("content elemeent: ", parts)
 
   return (
     <div>
@@ -27,23 +27,27 @@ const Content = ({parts}) => {
 
 const Total = ({parts}) => {
 
-  console.log("totals: ", parts)
+  // console.log("totals: ", parts)
   let execs = 0
-
   parts.map(part => execs += part.exercises)
 
-  console.log("total execs: ", execs)
+  // console.log("total execs: ", execs)
 
-  const total = parts.reduce( (s, p) => {
-    console.log('what is happening', s, p)
-    return 0 
-  })
-  console.log("tolas:", total)
+  const initialExecs = 0
+  const total = parts.reduce( (countingValue, valueInCurrentArray) => {
+    // console.log('what is happening', countingValue, valueInCurrentArray)
+    // console.log("current array index value: ", valueInCurrentArray)
+    return countingValue + valueInCurrentArray.exercises
+  }, initialExecs)
+  // console.log("total:", total)
 
   return (
     <div>
       <p>
-        Number of exercises: {execs}
+        Number of exercises (with map): {execs}
+      </p>
+      <p>
+        Number of exercises (with reduce): {total}
       </p>
     </div>
   )
@@ -51,10 +55,10 @@ const Total = ({parts}) => {
 
 const Course = ({course}) => {
 
-  console.log("course ele,mnmtii: ", course)
-  console.log("head: ", course.name)
-  console.log("id: ", course.id)
-  console.log("head: ", course.parts)
+  // console.log("course elementti: ", course)
+  // console.log("head: ", course.name)
+  // console.log("id: ", course.id)
+  // console.log("head: ", course.parts)
 
   return (
     <>
