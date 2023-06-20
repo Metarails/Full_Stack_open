@@ -1,5 +1,42 @@
 import { useState } from 'react'
 
+const PersonList = ({persons, filterEntry}) => {
+
+  const filterPersons = (person) => {
+    if (person.name.toLowerCase().includes(filterEntry.toLowerCase())){
+      return true
+    }
+    return(
+      person.number.toLowerCase().includes(filterEntry.toLowerCase())
+    )
+  }
+
+  const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterEntry.toLowerCase()))
+  const filteredPersons2 = persons.filter(filterPersons)
+
+  return(
+    <>
+      <div>
+        {persons.map(person => 
+            <Person key={person.name} person={person} />
+          )}
+      </div>
+      <h2>Filtered Numbers with name only</h2>
+      <div>
+        {filteredPersons.map(person => 
+            <Person key={person.name} person={person} />
+          )}
+      </div>
+      <h2>Filtered Numbers with numbers too</h2>
+      <div>
+        {filteredPersons2.map(person => 
+            <Person key={person.name} person={person} />
+          )}
+      </div>
+    </>
+  )
+}
+
 const Person = ({ person }) => {
 
   return (
@@ -23,12 +60,12 @@ const App = () => {
 
   const  addName = (event) => {
     event.preventDefault();
-    console.log("button clicked", event.target, "new name: ", newName)
+    // console.log("button clicked", event.target, "new name: ", newName)
 
     const includeTest = persons.find( person => newName === person.name)
-    console.log("includes test: ",  includeTest);
+    // console.log("includes test: ",  includeTest);
     if (includeTest !== undefined) {
-      console.log("LÖYTDY!!!")
+      // console.log("LÖYTY!!!")
       alert(`${newName} is already added to phonebook`)
     }
     else {
@@ -44,29 +81,17 @@ const App = () => {
   }
 
   const handleNameChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setNewName(event.target.value);
   }
   const handleNumberChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setNewNumber(event.target.value);
   }
   const handleFilterChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setFilterEntry(event.target.value);
   }
-
-  const filterPersons = (person) => {
-    if (person.name.toLowerCase().includes(filterEntry.toLowerCase())){
-      return true
-    }
-    return(
-      person.number.toLowerCase().includes(filterEntry.toLowerCase())
-    )
-  }
-
-  const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterEntry.toLowerCase()))
-  const filteredPersons2 = persons.filter(filterPersons)
 
   return (
     <div>
@@ -89,23 +114,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <div>
-        {persons.map(person => 
-            <Person key={person.name} person={person} />
-          )}
-      </div>
-      <h2>Filtered Numbers with name only</h2>
-      <div>
-        {filteredPersons.map(person => 
-            <Person key={person.name} person={person} />
-          )}
-      </div>
-      <h2>Filtered Numbers with numbers too</h2>
-      <div>
-        {filteredPersons2.map(person => 
-            <Person key={person.name} person={person} />
-          )}
-      </div>
+      <PersonList persons={persons} filterEntry={filterEntry} />
     </div>
   )
 
