@@ -11,8 +11,8 @@ const PersonList = ({persons, filterEntry}) => {
     )
   }
 
-  const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterEntry.toLowerCase()))
-  const filteredPersons2 = persons.filter(filterPersons)
+  const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterEntry.toLowerCase()));
+  const filteredPersons2 = persons.filter(filterPersons);
 
   return(
     <>
@@ -44,12 +44,37 @@ const Person = ({ person }) => {
   )
 }
 
+const PersonForm = ({newName, newNumber, handleNameChange, handleNumberChange, addName }) => {
+  
+
+  return (
+    <form onSubmit={addName}>
+      <div>
+        name: <input value={newName} onChange={handleNameChange} />
+      </div>
+      <div>
+        number: <input value={newNumber} onChange={handleNumberChange} />
+      </div>
+      {/* <div>debug name: {newName} Number: {newNumber}</div>
+      <div>debug filter: {filterEntry}</div> */}
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+)
+}
+
+const Filter = ({filterEntry,handleFilterChange}) => {
+  return (
+    <div>
+      filter shown: <input value={filterEntry} onChange={handleFilterChange} />
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
-    { 
-      name: "Arto Hellas",
-      number: "040-1231244",
-    },
+    { name: "Arto Hellas", number: "040-1231244" },
     { name: 'Ada Lovelace', number: '39-44-5323523' },
     { name: 'Dan Abramov', number: '12-43-234345' },
     { name: 'Mary Poppendieck', number: '39-23-6423122' }
@@ -57,6 +82,19 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterEntry, setFilterEntry] = useState("");
+
+  const handleNameChange = (event) => {
+    // console.log(event.target.value);
+    setNewName(event.target.value);
+  }
+  const handleNumberChange = (event) => {
+    // console.log(event.target.value);
+    setNewNumber(event.target.value);
+  }
+  const handleFilterChange = (event) => {
+    // console.log(event.target.value);
+    setFilterEntry(event.target.value);
+  }
 
   const  addName = (event) => {
     event.preventDefault();
@@ -80,40 +118,19 @@ const App = () => {
 
   }
 
-  const handleNameChange = (event) => {
-    // console.log(event.target.value);
-    setNewName(event.target.value);
-  }
-  const handleNumberChange = (event) => {
-    // console.log(event.target.value);
-    setNewNumber(event.target.value);
-  }
-  const handleFilterChange = (event) => {
-    // console.log(event.target.value);
-    setFilterEntry(event.target.value);
-  }
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown: <input value={filterEntry} onChange={handleFilterChange} />
-      </div>
-      <h2>Add new</h2>
-      <form onSubmit={addName}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        {/* <div>debug name: {newName} Number: {newNumber}</div>
-        <div>debug filter: {filterEntry}</div> */}
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <Filter filterEntry={filterEntry} handleFilterChange={handleFilterChange} />
+      <h3>Add new</h3>      
+      <PersonForm 
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addName={addName}      
+      />
+      <h3>Numbers</h3>
       <PersonList persons={persons} filterEntry={filterEntry} />
     </div>
   )
