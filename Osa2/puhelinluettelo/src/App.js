@@ -12,10 +12,14 @@ const App = () => {
     { 
       name: "Arto Hellas",
       number: "040-1231244",
-    }
+    },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ]) 
-  const [newName, setNewName] = useState("")
-  const [newNumber, setNewNumber] = useState("")
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [filterEntry, setFilterEntry] = useState("");
 
   const  addName = (event) => {
     event.preventDefault();
@@ -47,11 +51,30 @@ const App = () => {
     console.log(event.target.value);
     setNewNumber(event.target.value);
   }
+  const handleFilterChange = (event) => {
+    console.log(event.target.value);
+    setFilterEntry(event.target.value);
+  }
 
+  const filterPersons = (person) => {
+    if (person.name.toLowerCase().includes(filterEntry.toLowerCase())){
+      return true
+    }
+    return(
+      person.number.toLowerCase().includes(filterEntry.toLowerCase())
+    )
+  }
+
+  const filteredPersons = persons.filter(person => person.name.toLowerCase().includes(filterEntry.toLowerCase()))
+  const filteredPersons2 = persons.filter(filterPersons)
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown: <input value={filterEntry} onChange={handleFilterChange} />
+      </div>
+      <h2>Add new</h2>
       <form onSubmit={addName}>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
@@ -59,7 +82,8 @@ const App = () => {
         <div>
           number: <input value={newNumber} onChange={handleNumberChange} />
         </div>
-        <div>debug name: {newName} Number: {newNumber}</div>
+        {/* <div>debug name: {newName} Number: {newNumber}</div>
+        <div>debug filter: {filterEntry}</div> */}
         <div>
           <button type="submit">add</button>
         </div>
@@ -67,6 +91,18 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         {persons.map(person => 
+            <Person key={person.name} person={person} />
+          )}
+      </div>
+      <h2>Filtered Numbers with name only</h2>
+      <div>
+        {filteredPersons.map(person => 
+            <Person key={person.name} person={person} />
+          )}
+      </div>
+      <h2>Filtered Numbers with numbers too</h2>
+      <div>
+        {filteredPersons2.map(person => 
             <Person key={person.name} person={person} />
           )}
       </div>
