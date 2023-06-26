@@ -1,7 +1,7 @@
 import { useState , useEffect } from 'react'
 import peopleServices from "./services/persons"
 
-const PersonList = ({persons, filterEntry}) => {
+const PersonList = ({persons, filterEntry, delPerson }) => {
 
   const filterPersons = (person) => {
     if (person.name.toLowerCase().includes(filterEntry.toLowerCase())){
@@ -19,29 +19,29 @@ const PersonList = ({persons, filterEntry}) => {
     <>
       <div>
         {persons.map(person => 
-            <Person key={person.name} person={person} />
+            <Person key={person.name} person={person} delPerson={delPerson} />
           )}
       </div>
       <h2>Filtered Numbers with name only</h2>
       <div>
         {filteredPersons.map(person => 
-            <Person key={person.name} person={person} />
+            <Person key={person.name} person={person} delPerson={delPerson} />
           )}
       </div>
       <h2>Filtered Numbers with numbers too</h2>
       <div>
         {filteredPersons2.map(person => 
-            <Person key={person.name} person={person} />
+            <Person key={person.name} person={person} delPerson={delPerson} />
           )}
       </div>
     </>
   )
 }
 
-const Person = ({ person }) => {
-
+const Person = ({ person, delPerson }) => {
+  
   return (
-    <p>{person.name} {person.number}</p>
+    <p>{person.name} {person.number} <button onClick={() => delPerson(person)}>delete</button> </p>
   )
 }
 
@@ -130,6 +130,17 @@ const App = () => {
 
   }
 
+  const delPerson = (person) => {
+    // console.log("person:", person)
+    if (peopleServices.deletePerson(person)){      
+      peopleServices
+      .getAll()
+      .then(reGetPeople => {
+        setPersons(reGetPeople)
+      })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -143,7 +154,7 @@ const App = () => {
         addName={addName}      
       />
       <h3>Numbers</h3>
-      <PersonList persons={persons} filterEntry={filterEntry} />
+      <PersonList persons={persons} filterEntry={filterEntry} delPerson={delPerson} />
     </div>
   )
 
