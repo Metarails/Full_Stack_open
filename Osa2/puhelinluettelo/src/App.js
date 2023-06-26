@@ -107,11 +107,28 @@ const App = () => {
     event.preventDefault();
     // console.log("button clicked", event.target, "new name: ", newName)
 
-    const includeTest = persons.find( person => newName === person.name)
-    // console.log("includes test: ",  includeTest);
-    if (includeTest !== undefined) {
+    const findPersonTest = persons.find( person => newName === person.name)
+    // console.log("includes test: ",  findPersonTest);
+    if (findPersonTest !== undefined) {
       // console.log("LÖYTY!!!")
-      alert(`${newName} is already added to phonebook`)
+      // alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook. Do you want to update the phonenumber to: ${newNumber}?`)){
+        alert(`lets update dat nuimber ${newNumber}`);
+        console.log("number: ", newNumber);
+
+        console.log("orignal perosn data: ", findPersonTest)
+        const changedPerson = {...findPersonTest, number: newNumber};
+        console.log("changed person: ", changedPerson)
+        
+        console.log(persons.map(person => person.id !== findPersonTest.id ? person : changedPerson))
+
+        peopleServices
+          .update(changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== findPersonTest.id ? person : returnedPerson))
+          })
+      }
+      
     }
     else {
       const nameObject = {
