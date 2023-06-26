@@ -1,6 +1,18 @@
 import { useState , useEffect } from 'react'
 import peopleServices from "./services/persons"
 
+const Notification = ({ message }) => {
+  if (message === null || message === "" ) {
+    return null
+  }
+
+  return (
+    <div className="noticeMessage">
+      {message}
+    </div>
+  )
+}
+
 const PersonList = ({persons, filterEntry, delPerson }) => {
 
   const filterPersons = (person) => {
@@ -80,6 +92,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterEntry, setFilterEntry] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
 
@@ -116,16 +129,20 @@ const App = () => {
         alert(`lets update dat nuimber ${newNumber}`);
         console.log("number: ", newNumber);
 
-        console.log("orignal perosn data: ", findPersonTest)
+        console.log("orignal perosn data: ", findPersonTest);
         const changedPerson = {...findPersonTest, number: newNumber};
-        console.log("changed person: ", changedPerson)
+        console.log("changed person: ", changedPerson);
         
-        console.log(persons.map(person => person.id !== findPersonTest.id ? person : changedPerson))
+        console.log(persons.map(person => person.id !== findPersonTest.id ? person : changedPerson));
 
         peopleServices
           .update(changedPerson)
           .then(returnedPerson => {
-            setPersons(persons.map(person => person.id !== findPersonTest.id ? person : returnedPerson))
+            setPersons(persons.map(person => person.id !== findPersonTest.id ? person : returnedPerson));
+            setMessage(`Changed persons: ${findPersonTest.name} phonenumber to: ${newNumber}`);
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
       }
       
@@ -142,6 +159,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName("");
           setNewNumber("");
+          setMessage(`Added entry: ${newName}`);
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         })
     }
 
@@ -149,11 +170,15 @@ const App = () => {
 
   const delPerson = (person) => {
     // console.log("person:", person)
-    if (peopleServices.deletePerson(person)){      
+    if (peopleServices.deletePerson(person)){   
+      setMessage(`successfully deleted: ${person.name}`);
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000);
       peopleServices
       .getAll()
       .then(reGetPeople => {
-        setPersons(reGetPeople)
+        setPersons(reGetPeople);
       })
     }
   }
@@ -161,6 +186,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filterEntry={filterEntry} handleFilterChange={handleFilterChange} />
       <h3>Add new</h3>      
       <PersonForm 
