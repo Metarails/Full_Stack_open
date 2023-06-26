@@ -13,6 +13,18 @@ const Notification = ({ message }) => {
   )
 }
 
+const ErrorNotification = ({ message }) => {
+  if (message === null || message === "" ) {
+    return null
+  }
+
+  return (
+    <div className="errorMessage">
+      {message}
+    </div>
+  )
+}
+
 const PersonList = ({persons, filterEntry, delPerson }) => {
 
   const filterPersons = (person) => {
@@ -93,6 +105,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterEntry, setFilterEntry] = useState("");
   const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
 
@@ -144,6 +157,12 @@ const App = () => {
               setMessage(null)
             }, 5000)
           })
+          .catch(error => {
+            setErrorMessage(`Person ${findPersonTest.name} has laready been deleted`);
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
       }
       
     }
@@ -187,6 +206,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} />
+      <ErrorNotification message={errorMessage} />
       <Filter filterEntry={filterEntry} handleFilterChange={handleFilterChange} />
       <h3>Add new</h3>      
       <PersonForm 
