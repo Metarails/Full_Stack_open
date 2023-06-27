@@ -1,40 +1,43 @@
 import { useState, useEffect } from "react"
 import countryServices from "./services/countries"
 
-const Countries = ({messageValue, reducedCountryList}) => {
-  // console.log("countries lenght: ", reducedCountryList.length)
-  // console.log("singel country fro list: ",reducedCountryList[0]);
-  if (reducedCountryList.length === 1) {
+const Countries = ({reducedCountryList, setSingleCountryInfo, setReducedCountryList, setSearchValue, messageValue  }) => {
+
+  if (reducedCountryList.length > 10 || reducedCountryList.length === 0 ){
     return (
-      <SingleCountry country={reducedCountryList[0]} key={reducedCountryList[0].name.common}/>
+      <>
+        {messageValue}
+      </>
     )
   }
-  else if (reducedCountryList.length > 10 || reducedCountryList.length === 0 ){
-    return (
-      <div>
-        {messageValue}
-      </div>
-    )
+  else if (reducedCountryList.length === 1){
+    return null
   }
   return (
     <>
       {reducedCountryList.map(country => 
-        <Country country={country} key={country.name.common}/>
+        <Country country={country} key={country.name.common} setSingleCountryInfo={setSingleCountryInfo} setReducedCountryList={setReducedCountryList} setSearchValue={setSearchValue}/>
       )}
     </>
   )
 }
 
-const Country = ({country}) => {
+const Country = ({country, setSingleCountryInfo, setReducedCountryList, setSearchValue}) => {
 
   return (
     <div>
-      {country.name.common}
+      {country.name.common} <button onClick={(event) => {
+        setSingleCountryInfo(country);
+        setReducedCountryList([]);
+        setSearchValue("");
+        event.preventDefault();
+        }} >show</button>
     </div>
   )
 }
 
 const SingleCountry = ({country}) => {
+  if (country !== null){
   console.log("single function");
   console.log("country:", country);
   const languagesArray = Object.values(country.languages);
@@ -49,7 +52,7 @@ const SingleCountry = ({country}) => {
       </ul>
       <div><img src={country.flags.png} alt={country.flags.alt}></img></div>
     </div>
-  )
+  )}
 }
 
 
@@ -59,24 +62,27 @@ const App = () => {
   const [searchValue, setSearchValue] = useState("");
   const [messageValue, setMessageValue] = useState("initializing...");
   const [reducedCountryList, setReducedCountryList] = useState([]);
+  const [singleCountryInfo, setSingleCountryInfo] = useState(null);
 
   useEffect(() => {
-
     countryServices
       .getAll()
       .then(initialCountries => {
         setAllCountries(initialCountries);
         console.log("all countries use effect: ", initialCountries);
-        setMessageValue(`Currently ${initialCountries.length} countries in database`);
+        // setMessageValue(`Currently ${initialCountries.length} countries in database`);
+        setMessageValue(null);
       })
   },[])
 
   const handleSearchChange = (event) => {
+    console.log("search change handle");
+    setSingleCountryInfo(null);
     // console.log(event.target.value);
     setSearchValue(event.target.value);
     const filteredList = allCountries.filter((country) => {
       // console.log("country name: ", country.name.common);
-      if (country.name.common.includes(event.target.value)){
+      if (country.name.common.toLowerCase().includes(event.target.value.toLowerCase())){
         return country.name.common
       }
       return null
@@ -91,7 +97,13 @@ const App = () => {
     else if (countryCount === 0 ){
       setMessageValue(`Currently ${countryCount} countries with search, please expand search params`);
     }
-
+    else if (countryCount === 1 ){
+      setSingleCountryInfo(filteredList[0]);
+      setMessageValue(null);
+    }
+    else {
+      setMessageValue(null);
+    }
   }
 
   return (
@@ -99,11 +111,11 @@ const App = () => {
       <div>
         name: <input value={searchValue} onChange={handleSearchChange} />
       </div>
-      {/* <div>
-        {messageValue}
-      </div> */}
       <div>
-        <Countries reducedCountryList={reducedCountryList} messageValue={messageValue} />
+        <Countries reducedCountryList={reducedCountryList} messageValue={messageValue} setSingleCountryInfo={setSingleCountryInfo} setReducedCountryList={setReducedCountryList} setSearchValue={setSearchValue} />
+      </div>
+      <div>
+        <SingleCountry country={singleCountryInfo} />
       </div>
     </form>
   );
