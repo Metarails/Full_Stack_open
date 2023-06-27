@@ -114,6 +114,12 @@ const App = () => {
       .then(initialPeople => {
         setPersons(initialPeople)
       })
+      .catch(error => {
+        setErrorMessage(`somethign went wrong fetching data`);
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 15000)
+      })
   },[])
 
   const handleNameChange = (event) => {
@@ -139,14 +145,14 @@ const App = () => {
       // console.log("LÖYTY!!!")
       // alert(`${newName} is already added to phonebook`)
       if (window.confirm(`${newName} is already added to phonebook. Do you want to update the phonenumber to: ${newNumber}?`)){
-        alert(`lets update dat nuimber ${newNumber}`);
-        console.log("number: ", newNumber);
+        alert(`lets update number ${newNumber}`);
+        // console.log("number: ", newNumber);
 
-        console.log("orignal perosn data: ", findPersonTest);
+        // console.log("orignal person data: ", findPersonTest);
         const changedPerson = {...findPersonTest, number: newNumber};
-        console.log("changed person: ", changedPerson);
+        // console.log("changed person: ", changedPerson);
         
-        console.log(persons.map(person => person.id !== findPersonTest.id ? person : changedPerson));
+        // console.log(persons.map(person => person.id !== findPersonTest.id ? person : changedPerson));
 
         peopleServices
           .update(changedPerson)
@@ -158,7 +164,7 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
-            setErrorMessage(`Person ${findPersonTest.name} has laready been deleted`);
+            setErrorMessage(`Person ${findPersonTest.name} has already been deleted`);
             setTimeout(() => {
               setErrorMessage(null)
             }, 5000)
@@ -183,22 +189,38 @@ const App = () => {
             setMessage(null)
           }, 5000)
         })
+        .catch(error => {
+          setErrorMessage(`something went wrong creating new entry`);
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
 
   }
 
   const delPerson = (person) => {
     // console.log("person:", person)
-    if (peopleServices.deletePerson(person)){   
-      setMessage(`successfully deleted: ${person.name}`);
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000);
-      peopleServices
-      .getAll()
-      .then(reGetPeople => {
-        setPersons(reGetPeople);
-      })
+    const delRequest = peopleServices.deletePerson(person);
+    if (delRequest){
+      delRequest
+        .then( () => {   
+          setMessage(`successfully deleted: ${person.name}`);
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000);
+          peopleServices
+          .getAll()
+          .then(reGetPeople => {
+            setPersons(reGetPeople);
+          })
+        })
+        .catch(error => {
+          setErrorMessage(`Person ${person.name} has already been deleted`);
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
   }
 

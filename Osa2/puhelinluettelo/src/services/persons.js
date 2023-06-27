@@ -16,9 +16,9 @@ const deletePerson = (person) => {
   const deleteUrl = `${baseUrl}/${person.id}`
   // console.log("delete: ", deleteUrl)
   if(window.confirm(`do you want to delete ${person.name} ${person.number}?`)){
-    axios.delete(deleteUrl)
+    const request = axios.delete(deleteUrl)
     window.alert(`Deleted: ${person.name} ${person.number}`)
-    return true
+    return request
   }
   return false
 }
