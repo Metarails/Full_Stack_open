@@ -36,7 +36,7 @@ const Country = ({country, setSingleCountryInfo, setReducedCountryList, setSearc
   )
 }
 
-const SingleCountry = ({country}) => {
+const SingleCountry = ({country, weather}) => {
   if (country !== null){
   console.log("single function");
   console.log("country:", country);
@@ -51,8 +51,37 @@ const SingleCountry = ({country}) => {
         {languagesArray.map(langName => <li key={langName}>{langName}</li>)}
       </ul>
       <div><img src={country.flags.png} alt={country.flags.alt}></img></div>
+
+      <WeatherInfo country={country} weather={weather} />
     </div>
   )}
+}
+
+const WeatherInfo = ({country, weather}) => {
+
+  if (weather.length !== 0 ){
+  console.log("tiedot mitä' tarvitaan, coordit ja api: ", process.env.REACT_APP_SECRET_API_KEY_OPNWEA);
+  // console.log("coordit: ", country.capitalInfo.latlng[0] , country.capitalInfo.latlng[1]);
+
+  console.log("printing the weather info: ", weather)
+
+  // const api_url = `https://api.openweathermap.org/data/2.5/weather?lat=${country.capitalInfo.latlng[0]}&lon=${country.capitalInfo.latlng[1]}&appid=${process.env.REACT_APP_SECRET_API_KEY_OPNWEA}`
+  // const api_url = "https://samples.openweathermap.org/data/2.5/weather?q=London&appid=b1b15e88fa797225412429c1c50c122a1"
+
+  // https://openweathermap.org/img/wn/10d@2x.png
+  // const weatherInfo = countryServices.getWeather(api_url);
+
+  const iconAddress = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`
+    return (
+      <div>
+        <h1>Weather in {country.capital} </h1>
+
+        <p>Temperature is: {weather.main.temp}</p>
+        <div><img src={iconAddress} alt={weather.weather[0].description}></img></div>
+        <p>Wind is: {weather.wind.speed} m/s</p>
+      </div>
+    )
+  }
 }
 
 
@@ -63,6 +92,7 @@ const App = () => {
   const [messageValue, setMessageValue] = useState("initializing...");
   const [reducedCountryList, setReducedCountryList] = useState([]);
   const [singleCountryInfo, setSingleCountryInfo] = useState(null);
+  const [weatherInfo, setWeatherInfo ] = useState([]);
 
   useEffect(() => {
     countryServices
@@ -100,11 +130,28 @@ const App = () => {
     else if (countryCount === 1 ){
       setSingleCountryInfo(filteredList[0]);
       setMessageValue(null);
+      const api_url = `https://api.openweathermap.org/data/2.5/weather?lat=${filteredList[0].capitalInfo.latlng[0]}&lon=${filteredList[0].capitalInfo.latlng[1]}&units=metric&appid=${process.env.REACT_APP_SECRET_API_KEY_OPNWEA}`
+      countryServices
+        .getWeather(api_url)
+        .then(fetchedWeather => {
+          console.log("weather info: ", fetchedWeather);
+          setWeatherInfo(fetchedWeather);
+        })
     }
     else {
       setMessageValue(null);
     }
   }
+
+  // winowsissa temp api keyn asetus
+  // set "REACT_APP_API_KEY=abcdef3242342" && npm start
+  const api_key_run = process.env.REACT_APP_API_KEY
+  const api_key_env = process.env.REACT_APP_NOT_SECRET_CODE
+  const api_key_opn_wea = process.env.REACT_APP_SECRET_API_KEY_OPNWEA
+  console.log("run env api key tieto: ", api_key_run)
+  console.log("env api key tieto: ", api_key_env)
+  console.log("env api open weather key tieto: ", api_key_opn_wea)
+
 
   return (
     <form >
@@ -115,7 +162,7 @@ const App = () => {
         <Countries reducedCountryList={reducedCountryList} messageValue={messageValue} setSingleCountryInfo={setSingleCountryInfo} setReducedCountryList={setReducedCountryList} setSearchValue={setSearchValue} />
       </div>
       <div>
-        <SingleCountry country={singleCountryInfo} />
+        <SingleCountry country={singleCountryInfo} weather={weatherInfo} />
       </div>
     </form>
   );
