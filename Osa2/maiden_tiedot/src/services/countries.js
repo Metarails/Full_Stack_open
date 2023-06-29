@@ -8,11 +8,11 @@ const getAll = () => {
 }
 
 const getWeather = (weatherUrl) => {
-    console.log("weather url: ", weatherUrl);
+    // console.log("weather url: ", weatherUrl);
     const request = axios.get(`${weatherUrl}`);
 
     return request.then(response => {
-        console.log("fetched data in service portion: ", response.data)
+        // console.log("fetched data in service portion: ", response.data)
         return response.data})
 }
 

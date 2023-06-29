@@ -38,8 +38,8 @@ const Country = ({country, setSingleCountryInfo, setReducedCountryList, setSearc
 
 const SingleCountry = ({country, weather}) => {
   if (country !== null){
-  console.log("single function");
-  console.log("country:", country);
+  // console.log("single function");
+  // console.log("country:", country);
   const languagesArray = Object.values(country.languages);
   return (
     <div>
@@ -60,23 +60,15 @@ const SingleCountry = ({country, weather}) => {
 const WeatherInfo = ({country, weather}) => {
 
   if (weather.length !== 0 ){
-  console.log("tiedot mitä' tarvitaan, coordit ja api: ", process.env.REACT_APP_SECRET_API_KEY_OPNWEA);
   // console.log("coordit: ", country.capitalInfo.latlng[0] , country.capitalInfo.latlng[1]);
-
-  console.log("printing the weather info: ", weather)
-
-  // const api_url = `https://api.openweathermap.org/data/2.5/weather?lat=${country.capitalInfo.latlng[0]}&lon=${country.capitalInfo.latlng[1]}&appid=${process.env.REACT_APP_SECRET_API_KEY_OPNWEA}`
-  // const api_url = "https://samples.openweathermap.org/data/2.5/weather?q=London&appid=b1b15e88fa797225412429c1c50c122a1"
-
-  // https://openweathermap.org/img/wn/10d@2x.png
-  // const weatherInfo = countryServices.getWeather(api_url);
+  // console.log("printing the weather info: ", weather)
 
   const iconAddress = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`
     return (
       <div>
         <h1>Weather in {country.capital} </h1>
 
-        <p>Temperature is: {weather.main.temp}</p>
+        <p>Temperature is: {weather.main.temp} Celsius</p>
         <div><img src={iconAddress} alt={weather.weather[0].description}></img></div>
         <p>Wind is: {weather.wind.speed} m/s</p>
       </div>
@@ -99,14 +91,13 @@ const App = () => {
       .getAll()
       .then(initialCountries => {
         setAllCountries(initialCountries);
-        console.log("all countries use effect: ", initialCountries);
+        // console.log("all countries use effect: ", initialCountries);
         // setMessageValue(`Currently ${initialCountries.length} countries in database`);
         setMessageValue(null);
       })
   },[])
 
   const handleSearchChange = (event) => {
-    console.log("search change handle");
     setSingleCountryInfo(null);
     // console.log(event.target.value);
     setSearchValue(event.target.value);
@@ -134,7 +125,7 @@ const App = () => {
       countryServices
         .getWeather(api_url)
         .then(fetchedWeather => {
-          console.log("weather info: ", fetchedWeather);
+          // console.log("weather info: ", fetchedWeather);
           setWeatherInfo(fetchedWeather);
         })
     }
@@ -143,14 +134,14 @@ const App = () => {
     }
   }
 
-  // winowsissa temp api keyn asetus
+  // winowsissa cmd temp api keyn asetus
   // set "REACT_APP_API_KEY=abcdef3242342" && npm start
-  const api_key_run = process.env.REACT_APP_API_KEY
-  const api_key_env = process.env.REACT_APP_NOT_SECRET_CODE
-  const api_key_opn_wea = process.env.REACT_APP_SECRET_API_KEY_OPNWEA
-  console.log("run env api key tieto: ", api_key_run)
-  console.log("env api key tieto: ", api_key_env)
-  console.log("env api open weather key tieto: ", api_key_opn_wea)
+  // const api_key_run = process.env.REACT_APP_API_KEY
+  // const api_key_env = process.env.REACT_APP_NOT_SECRET_CODE
+  // const api_key_opn_wea = process.env.REACT_APP_SECRET_API_KEY_OPNWEA
+  // console.log("run env api key tieto: ", api_key_run)
+  // console.log("env api key tieto: ", api_key_env)
+  // console.log("env api open weather key tieto: ", api_key_opn_wea)
 
 
   return (
