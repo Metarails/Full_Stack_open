@@ -19,6 +19,20 @@ app.use(express.static("build"));
 app.use(requestLogger);
 app.use(cors());
 
+
+const errorHandler = (error, request, response, next) => {
+    console.error("error handler middleware: ", error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    }
+  
+    next(error)
+  }
+  
+// tämä tulee kaikkien muiden middlewarejen rekisteröinnin jälkeen!
+app.use(errorHandler)
+
 // let notes = [
 //     {
 //         id: 1,
@@ -91,10 +105,23 @@ app.post("/api/notes", (request, response) => {
     // response.json(note);
 })
 
-app.get("/api/notes/:id", (request, response) => {
-    Note.findById(request.params.id).then(note => {
-        response.json(note)
-      })
+app.get("/api/notes/:id", (request, response, next) => {
+    Note.findById(request.params.id)
+        .then(note => {
+            console.log("what is foud note?: ", note)
+            if (note){
+                response.json(note);
+            } else {
+                response.status(404).end();
+            }    
+        })
+        .catch(error => next(error))
+
+        // .catch(error => {
+        //     return next(error)
+        // })
+        //     console.log(error);
+        //     response.status(400).send({error: "malformatted id"});
     // const id = request.params.id;
     // console.log(id);
     // const note = notes.find(note => {
