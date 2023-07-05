@@ -14,6 +14,18 @@ const requestLogger = (request, response, next) => {
     next();
 }
 
+const errorHandler = (error, request, response, next) => {
+    console.error("error handler middleware: ", error.message)
+  
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    } else if (error.name === "ValidationError"){
+        return response.status(400).json({ error: error.message })
+    }
+  
+    next(error)
+  }
+
 app.use(express.json());
 app.use(express.static("build"));
 app.use(requestLogger);
@@ -64,25 +76,29 @@ const generateId = () => {
   }
 
   
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
     console.log("headers: ", request.headers);
     
     const body = request.body;
 
-    if (body.content === undefined){
-        return response.status(400).json({
-            error: "content missing"
-        });
-    }
+    // if (body.content === undefined){
+    //     return response.status(400).json({
+    //         error: "content missing"
+    //     });
+    // }
 
     const note = new Note({
         content: body.content,
         important: body.important || false,
     })
     
-    note.save().then(savedNote =>{
-        response.json(savedNote)
+    console.log("posting new note:  ", note);
+
+    note.save()
+        .then(savedNote =>{
+            response.json(savedNote)
     })
+    .catch(error => next(error))
     // const note = {
     //     content: body.content,
     //     important: body.important || false,
@@ -170,17 +186,6 @@ const unknownEndpoint = (request, response) => {
   }
   
 app.use(unknownEndpoint)
-
-
-const errorHandler = (error, request, response, next) => {
-    console.error("error handler middleware: ", error.message)
-  
-    if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    }
-  
-    next(error)
-  }
   
 // tämä tulee kaikkien muiden middlewarejen rekisteröinnin jälkeen!
 app.use(errorHandler)
