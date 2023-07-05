@@ -1,0 +1,7 @@
+DELETE http://localhost:3001/api/notes/64a51fb6f92339c14ea787ce
+content-type: application/json
+
+{
+    "content": "VS code handy man too",
+    "important": "true"
+}

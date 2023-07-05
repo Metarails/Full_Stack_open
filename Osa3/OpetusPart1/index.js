@@ -20,18 +20,7 @@ app.use(requestLogger);
 app.use(cors());
 
 
-const errorHandler = (error, request, response, next) => {
-    console.error("error handler middleware: ", error.message)
-  
-    if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
-    }
-  
-    next(error)
-  }
-  
-// tämä tulee kaikkien muiden middlewarejen rekisteröinnin jälkeen!
-app.use(errorHandler)
+
 
 // let notes = [
 //     {
@@ -108,14 +97,17 @@ app.post("/api/notes", (request, response) => {
 app.get("/api/notes/:id", (request, response, next) => {
     Note.findById(request.params.id)
         .then(note => {
-            console.log("what is foud note?: ", note)
+            console.log("what is found note?: ", note)
             if (note){
                 response.json(note);
             } else {
                 response.status(404).end();
             }    
         })
-        .catch(error => next(error))
+        .catch(error => {
+            // console.log("error: ", error)
+            console.log("should be going to error middleware next?: ", error.message)
+            next(error)})
 
         // .catch(error => {
         //     return next(error)
@@ -140,11 +132,32 @@ app.get("/api/notes/:id", (request, response, next) => {
     // response.json(note);
   })
 
-  app.delete('/api/notes/:id', (request, response) => {
-    const id = Number(request.params.id);
-    notes = notes.filter(note => note.id !== id);
+app.put('/api/notes/:id', (request, response, next) => {
+    const body = request.body
   
-    response.status(204).end();
+    const note = {
+      content: body.content,
+      important: body.important,
+    }
+  
+    Note.findByIdAndUpdate(request.params.id, note, { new: true })
+      .then(updatedNote => {
+        response.json(updatedNote)
+      })
+      .catch(error => next(error))
+  })
+
+  app.delete('/api/notes/:id', (request, response, next) => {
+    
+    Note.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error));
+    // const id = Number(request.params.id);
+    // notes = notes.filter(note => note.id !== id);
+  
+    // response.status(204).end();
   })
 
 const PORT = process.env.PORT || 3001 
@@ -156,4 +169,18 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
   }
   
-  app.use(unknownEndpoint)
+app.use(unknownEndpoint)
+
+
+const errorHandler = (error, request, response, next) => {
+    console.error("error handler middleware: ", error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    }
+  
+    next(error)
+  }
+  
+// tämä tulee kaikkien muiden middlewarejen rekisteröinnin jälkeen!
+app.use(errorHandler)
