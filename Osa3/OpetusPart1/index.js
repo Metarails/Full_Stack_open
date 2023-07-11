@@ -1,3 +1,8 @@
+const app = require("./app")
+const config = require("./utils/config")
+const logger = require("./utils/logger")
+
+
 require("dotenv").config()
 const express = require("express")
 const app = express()
@@ -183,8 +188,9 @@ app.delete("/api/notes/:id", (request, response, next) => {
 })
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-	console.log(`Server runnin on port ${PORT}`)
+
+app.listen(config.PORT, () => {
+	logger.log(`Server runnin on port ${config.PORT}`)
 })
 
 const unknownEndpoint = (request, response) => {
