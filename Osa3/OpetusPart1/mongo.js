@@ -12,6 +12,8 @@ const password = process.argv[2]
 const url =
   `mongodb+srv://Metarail:${password}@metarail0.5iydssj.mongodb.net/noteApp?retryWrites=true&w=majority`
 
+// const url = `mongodb+srv://Metarail:${password}@metarail0.5iydssj.mongodb.net/noteApp?retryWrites=true&w=majority`
+
 mongoose.set("strictQuery", false)
 mongoose.connect(url)
 

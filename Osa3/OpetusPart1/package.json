@@ -4,13 +4,13 @@
   "description": "Full stack open opetus osa 3",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
     "build:no_build": "cd ../../Osa2/part1 && npm run build && @powershell Copy-Item build -Recurse ../../Osa3/OpetusPart1",
     "build:ui": "@powershell Remove-Item -Recurse -Force build && cd ../../Osa2/part1 && npm run build && @powershell Copy-Item build -Recurse ../../Osa3/OpetusPart1",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
     "lint": "eslint .",
-    "test": "jest --verbose"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "Sami",
   "license": "ISC",
@@ -21,11 +21,14 @@
     "mongoose": "^7.3.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "eslint": "^8.44.0",
     "jest": "^29.6.1",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "globalTeardown": "./tests/teardown.js"
   }
 }
